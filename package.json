@@ -2,7 +2,9 @@
   "name": "training-platform",
   "packageManager": "yarn@3.4.1",
   "dependencies": {
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "mongodb": "^5.0.1",
+    "mongoose": "^6.9.1"
   },
   "scripts": {
     "start": "node server/index.js"
