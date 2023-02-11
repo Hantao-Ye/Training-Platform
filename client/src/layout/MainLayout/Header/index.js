@@ -7,6 +7,7 @@ import { Box, ButtonBase, Avatar } from '@mui/material';
 // project imports
 import LogoSection from '../LogoSection';
 import ProfileSection from './ProfileSection';
+import PagesSelection from './RelatedPagesSection';
 
 // assets
 import { IconMenu2 } from '@tabler/icons';
@@ -58,6 +59,7 @@ const Header = ({ handleLeftDrawerToggle }) => {
             <Box sx={{ flexGrow: 1 }} />
 
             {/* notification & profile */}
+            <PagesSelection />
             <ProfileSection />
         </>
     );
