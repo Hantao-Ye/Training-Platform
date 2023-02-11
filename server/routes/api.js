@@ -36,7 +36,7 @@ router.post('/user/login', (req, res) => {
     User.findOne({ email: req.body.email })
         .then((user) => {
             if (!user.validPassword(req.body.password)) {
-                return res.status(403).send({ message: 'Password not correct.', error });
+                return res.status(403).send({ message: 'Password not correct.'});
             }
 
             const token = jwt.sign(
