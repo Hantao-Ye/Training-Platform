@@ -1,43 +1,58 @@
 const express = require('express');
+const jwt = require('jsonwebtoken');
+
 const router = express.Router();
 
-const Model = require('../models/test_model');
+const User = require('../models/user_model');
 
-//Post Method
-router.post('/post', async (req, res) => {
-    const data = new Model({
-        name: req.body.name,
-        age: req.body.age
-    })
+router.post('/user/register', async (req, res) => {
+    const user = new User();
+    user.email = req.body.email;
+    user.password = user.generateHash(req.body.password);
 
-    try {
-        const dataToSave = await data.save();
-        res.status(200).json(dataToSave)
-    }
-    catch (error) {
-        res.status(400).json({message: error.message})
-    }
-})
+    user.save()
+        .then((result) => {
+            const token = jwt.sign(
+                {
+                    userId: user._id,
+                    userEmail: user.email
+                },
+                process.env.RANDOM_TOKEN,
+                { expiresIn: '72h' }
+            );
 
-//Get all Method
-router.get('/getAll', (req, res) => {
-    res.send('Get All API')
-})
+            res.status(201).send({ message: 'User created successfully', result, token });
+        })
+        .catch((error) => {
+            if (error.code && error.code == 11000) {
+                res.status(409).send({ message: 'An account with the same email already exists.', error });
+            } else {
+                res.status(500).send({ message: 'Error creating user', error });
+            }
+        });
+});
 
-//Get by ID Method
-router.get('/getOne/:id', (req, res) => {
-    res.send('Get by ID API')
-})
+router.post('/user/login', (req, res) => {
+    User.findOne({ email: req.body.email })
+        .then((user) => {
+            if (!user.validPassword(req.body.password)) {
+                return res.status(403).send({ message: 'Password not correct.', error });
+            }
 
-//Update by ID Method
-router.patch('/update/:id', (req, res) => {
-    res.send('Update by ID API')
-})
+            const token = jwt.sign(
+                {
+                    userId: user._id,
+                    userEmail: user.email
+                },
+                process.env.RANDOM_TOKEN,
+                { expiresIn: '72h' }
+            );
 
-//Delete by ID Method
-router.delete('/delete/:id', (req, res) => {
-    res.send('Delete by ID API')
-})
-
+            res.status(200).send({ message: 'Login successful', email: user.email, token });
+        })
+        .catch((error) => {
+            res.status(404).send({ message: 'Email not found', error });
+        });
+});
 
 module.exports = router;

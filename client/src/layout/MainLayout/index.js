@@ -1,5 +1,8 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { Outlet } from 'react-router-dom';
+import { Navigate, Outlet } from 'react-router-dom';
+
+// 3rd part repository
+import Cookies from 'universal-cookie';
 
 // material-ui
 import { styled, useTheme } from '@mui/material/styles';
@@ -15,6 +18,8 @@ import { SET_MENU } from 'store/actions';
 
 // assets
 import { IconChevronRight } from '@tabler/icons';
+
+const cookies = new Cookies();
 
 // styles
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(({ theme, open }) => ({
@@ -71,6 +76,11 @@ const MainLayout = () => {
     const handleLeftDrawerToggle = () => {
         dispatch({ type: SET_MENU, opened: !leftDrawerOpened });
     };
+
+    const token = cookies.get('TOKEN');
+    if (!token) {
+        return <Navigate to="/login"></Navigate>;
+    }
 
     return (
         <Box sx={{ display: 'flex' }}>

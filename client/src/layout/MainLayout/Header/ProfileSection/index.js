@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import Cookies from 'universal-cookie';
 
 // material-ui
 import { useTheme } from '@mui/material/styles';
@@ -40,8 +41,11 @@ const ProfileSection = () => {
      * anchorRef is used on different components and specifying one type leads to other components throwing an error
      * */
     const anchorRef = useRef(null);
-    const handleLogout = async () => {
-        console.log('Logout');
+    const cookies = new Cookies();
+    const handleLogout = () => {
+        // destroy the cookie
+        cookies.remove('TOKEN', { path: '/' });
+        navigate('/login');
     };
 
     const handleClose = (event) => {
@@ -159,13 +163,14 @@ const ProfileSection = () => {
                                             <ListItemButton
                                                 sx={{ borderRadius: `${customization.borderRadius}px` }}
                                                 selected={selectedIndex === 0}
-                                                onClick={(event) => handleListItemClick(event, 0, '/user/account-profile/profile1')}
+                                                onClick={(event) => handleListItemClick(event, 0, '/')}
                                             >
                                                 <ListItemIcon>
                                                     <IconSettings stroke={1.5} size="1.3rem" />
                                                 </ListItemIcon>
                                                 <ListItemText primary={<Typography variant="body2">Account Profile</Typography>} />
                                             </ListItemButton>
+
                                             <ListItemButton
                                                 sx={{ borderRadius: `${customization.borderRadius}px` }}
                                                 selected={selectedIndex === 4}
