@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
 
-import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 // material-ui
@@ -31,9 +30,7 @@ import { IconFileText, IconLink, IconHelp } from '@tabler/icons';
 const PagesSelection = () => {
     const theme = useTheme();
     const customization = useSelector((state) => state.customization);
-    const navigate = useNavigate();
 
-    const [selectedIndex, setSelectedIndex] = useState(-1);
     const [open, setOpen] = useState(false);
     /**
      * anchorRef is used on different components and specifying one type leads to other components throwing an error
@@ -47,12 +44,13 @@ const PagesSelection = () => {
         setOpen(false);
     };
 
-    const handleListItemClick = (event, index, route = '') => {
-        setSelectedIndex(index);
+    const handleListItemClick = (event, route = '') => {
         handleClose(event);
 
-        if (route && route !== '') {
-            navigate(route);
+        if (route && route === '/docs') {
+            window.open('https://codedthemes.gitbook.io/berry/', '_blank');
+        } else if (route && route === '/support') {
+            window.open('mailto:hantaoye@usc.edu', '_blank');
         }
     };
     const handleToggle = () => {
@@ -148,8 +146,7 @@ const PagesSelection = () => {
                                         >
                                             <ListItemButton
                                                 sx={{ borderRadius: `${customization.borderRadius}px` }}
-                                                selected={selectedIndex === 0}
-                                                onClick={(event) => handleListItemClick(event, 0, '/docs')}
+                                                onClick={(event) => handleListItemClick(event, '/docs')}
                                             >
                                                 <ListItemIcon>
                                                     <IconFileText stroke={1.5} size="1.3rem" />
@@ -159,8 +156,7 @@ const PagesSelection = () => {
 
                                             <ListItemButton
                                                 sx={{ borderRadius: `${customization.borderRadius}px` }}
-                                                selected={selectedIndex === 4}
-                                                onClick={(event) => handleListItemClick(event, 0, '/support')}
+                                                onClick={(event) => handleListItemClick(event, '/support')}
                                             >
                                                 <ListItemIcon>
                                                     <IconHelp stroke={1.5} size="1.3rem" />

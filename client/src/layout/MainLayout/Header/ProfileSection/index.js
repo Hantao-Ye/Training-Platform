@@ -35,7 +35,6 @@ const ProfileSection = () => {
     const customization = useSelector((state) => state.customization);
     const navigate = useNavigate();
 
-    const [selectedIndex, setSelectedIndex] = useState(-1);
     const [open, setOpen] = useState(false);
     /**
      * anchorRef is used on different components and specifying one type leads to other components throwing an error
@@ -55,14 +54,14 @@ const ProfileSection = () => {
         setOpen(false);
     };
 
-    const handleListItemClick = (event, index, route = '') => {
-        setSelectedIndex(index);
+    const handleListItemClick = (event, route = '') => {
         handleClose(event);
 
         if (route && route !== '') {
             navigate(route);
         }
     };
+
     const handleToggle = () => {
         setOpen((prevOpen) => !prevOpen);
     };
@@ -162,8 +161,7 @@ const ProfileSection = () => {
                                         >
                                             <ListItemButton
                                                 sx={{ borderRadius: `${customization.borderRadius}px` }}
-                                                selected={selectedIndex === 0}
-                                                onClick={(event) => handleListItemClick(event, 0, '/')}
+                                                onClick={(event) => handleClose(event)}
                                             >
                                                 <ListItemIcon>
                                                     <IconSettings stroke={1.5} size="1.3rem" />
@@ -171,11 +169,7 @@ const ProfileSection = () => {
                                                 <ListItemText primary={<Typography variant="body2">Account Profile</Typography>} />
                                             </ListItemButton>
 
-                                            <ListItemButton
-                                                sx={{ borderRadius: `${customization.borderRadius}px` }}
-                                                selected={selectedIndex === 4}
-                                                onClick={handleLogout}
-                                            >
+                                            <ListItemButton sx={{ borderRadius: `${customization.borderRadius}px` }} onClick={handleLogout}>
                                                 <ListItemIcon>
                                                     <IconLogout stroke={1.5} size="1.3rem" />
                                                 </ListItemIcon>
